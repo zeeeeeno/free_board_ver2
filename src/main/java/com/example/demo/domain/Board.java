@@ -7,6 +7,20 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * create table board
+ * (
+ * boardNo integer not null auto_increment,
+ * title varchar(50) not null,
+ * author varchar(20) not null,
+ * contents varchar(1000) not null,
+ * views integer not null,
+ * currentTime date,
+ * modifyTime date,
+ * useYN varchar(10) not null,
+ * primary key(boardNo)
+ * );
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
