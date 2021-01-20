@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,15 +22,16 @@ import java.util.Date;
  * primary key(boardNo)
  * );
  */
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Board implements Serializable {
     private String boardNo;
     private String title;
     private String author;
+    private String contents;
     private String views;
-    private Date currentTime;
-    private Date modifyTime;
+    private String currentTime;
+    private String modifyTime;
     private String useYN;
 }

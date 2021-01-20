@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout/default"
+        xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div layout:fragment="board">
+    <div id="container">
+        <div>
+            <h3>글 목록</h3>
+        </div>
+        <hr>
+        <div id="body_area">
+            <div id="contents_area">
+                <div id="contents_top_area">
+                    <p id="total_board"> 전체 게시글: <span id="totalCntBoard"></span></p>
+                </div>
+                <div class="board__container" id="div_table_area">
+                    <table class="board__table-head" id="table_area">
+                        <thead class="board__titles" id="thead_area">
+                        <tr class="board__titles">
+                            <th class="board__column">번호</th>
+                            <th class="board__column">제목</th>
+                            <th class="board__column">작성자</th>
+                            <th class="board__column">작성일</th>
+                            <th class="board__column">조회</th>
+                        </tr>
+                        </thead>
+                        <tbody class="board__contents" id="board-body">
+                            <tr th:each="board : ${boardList}">
+                                <td th:text="${board.boardNo}"></td>
+                                <td>
+                                    <a th:text="${board.title}" th:href="@{/board/detail/{boardNo}(boardNo = ${board.boardNo})}"></a>
+                                </td>
+                                <td th:text="${board.author}"></td>
+                                <td th:text="${board.modifyTime}"></td>
+                                <td th:text="${board.views}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="board__index-container" id="index-container"></div>
+                </div>
+            </div>
+            <div id="bottom_area">
+                <a th:href="@{/board/write}" id="create_register">게시글 작성</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--<script>-->
+<!--    const boardTableBody = document.querySelector('#board-body');-->
+<!--    const BOARD = 'board';-->
+
+<!--    /*-->
+<!--        조회수 늘리기-->
+<!--    */-->
+<!--    function onTitleClick(e) {-->
+<!--        let lists = JSON.parse(localStorage.getItem(BOARD));-->
+<!--        const index = e.target.id.replace(/[a-z|-]/gi, '');-->
+
+<!--        for (let cnt = 0; cnt < lists.length; cnt++) {-->
+<!--            if (lists[cnt].num === index) {-->
+<!--                var legacyIdx = Number(lists[cnt].views);-->
+<!--                var chIdx = legacyIdx + 1;-->
+
+<!--                lists[cnt].views = chIdx;-->
+<!--                localStorage.setItem("clickBoardNum", cnt);-->
+<!--            }-->
+<!--        }-->
+
+<!--        localStorage.setItem(BOARD, JSON.stringify(lists));-->
+
+<!--        window.location.replace("./board_detail.html");-->
+<!--    }-->
+
+<!--    /*-->
+<!--        리스트가 비어있는지 체크-->
+<!--    */-->
+<!--    function emptyCheck() {-->
+<!--        const lists = JSON.parse(localStorage.getItem(BOARD));-->
+
+<!--        if (!lists || lists.length == 0) {-->
+
+<!--            // test를 위해서 임시 데이터 삽입-->
+<!--            initList();-->
+
+<!--            /*-->
+<!--            const tr = document.createElement('tr');-->
+<!--            tr.classList.add('board__content');-->
+
+<!--            const tdNum = document.createElement('td');-->
+<!--            tdNum.classList.add('board__content-column');-->
+<!--            tdNum.colSpan = 6;-->
+<!--            tdNum.style.textAlign = "center";-->
+<!--            tdNum.style.height = "40px";-->
+<!--            tdNum.textContent = "게시글이 없습니다.";-->
+
+<!--            tr.appendChild(tdNum);-->
+
+<!--            boardTableBody.appendChild(tr);-->
+<!--            */-->
+<!--        }-->
+<!--    }-->
+
+<!--    /*-->
+<!--        list 출력-->
+<!--        local storage 활용-->
+<!--    */-->
+<!--    function showBoardLists() {-->
+<!--        const lists = JSON.parse(localStorage.getItem(BOARD));-->
+<!--        const listsSize = lists.length;-->
+<!--        const listCnt = $('#totalCntBoard').text(listsSize);-->
+
+<!--        let nums = 1;-->
+<!--        let date = new Date();-->
+<!--        let views = 0;-->
+
+<!--        // 배열 역순 정렬-->
+<!--        lists.reverse();-->
+
+<!--        /*-->
+<!--            게시글 리스트 출력, 페이지네이션-->
+<!--        */-->
+<!--        lists.forEach((list, index) => {-->
+<!--            if (index < 5) {-->
+<!--                const tr = document.createElement('tr');-->
+<!--                tr.classList.add('board__content');-->
+
+<!--                const tdNum = document.createElement('td');-->
+<!--                tdNum.classList.add('board__content-column');-->
+<!--                tdNum.textContent = list.num;-->
+<!--                tdNum.style.width = '10%';-->
+
+<!--                const tdTitle = document.createElement('td');-->
+<!--                tdTitle.classList.add('board__content-column');-->
+<!--                tdTitle.style.textAlign = 'left';-->
+<!--                tdTitle.style.width = '50%';-->
+
+<!--                const aTitle = document.createElement('a');-->
+<!--                aTitle.textContent = list.title;-->
+<!--                aTitle.href = '#';-->
+<!--                aTitle.id = `link-to-content${list.num}`;-->
+
+<!--                tdTitle.appendChild(aTitle);-->
+
+<!--                const tdAuthor = document.createElement('td');-->
+<!--                tdAuthor.classList.add('board__content-column');-->
+<!--                tdAuthor.textContent = list.author;-->
+<!--                tdAuthor.style.width = '15%';-->
+
+<!--                const tdDate = document.createElement('td');-->
+<!--                tdDate.classList.add('board__content-column');-->
+<!--                tdDate.textContent = list.date;-->
+<!--                tdDate.style.width = '15%';-->
+
+<!--                const tdViews = document.createElement('td');-->
+<!--                tdViews.classList.add('board__content-column');-->
+<!--                tdViews.textContent = list.views;-->
+<!--                tdViews.style.width = '10%';-->
+
+<!--                tr.appendChild(tdNum);-->
+<!--                tr.appendChild(tdTitle);-->
+<!--                tr.appendChild(tdAuthor);-->
+<!--                tr.appendChild(tdDate);-->
+<!--                tr.appendChild(tdViews);-->
+
+<!--                boardTableBody.appendChild(tr);-->
+
+<!--                const linkToContent = document.querySelector(-->
+<!--                        `#link-to-content${list.num}`-->
+<!--                );-->
+
+<!--                linkToContent.addEventListener('click', onTitleClick);-->
+
+<!--            } else if (index === 5) {-->
+<!--                const boardIndexMax = Math.ceil(lists.length / 5);-->
+<!--                for (let i = 0; i < boardIndexMax; i++) {-->
+<!--                    const indexContainer = document.querySelector('#index-container');-->
+
+<!--                    const aIndex = document.createElement('a');-->
+<!--                    // aIndex.href = '#';-->
+<!--                    aIndex.classList.add('board__index-link');-->
+
+<!--                    const spanIndexText = document.createElement('span');-->
+<!--                    spanIndexText.classList.add('board__index');-->
+<!--                    spanIndexText.id = `board__index${i + 1}`;-->
+<!--                    spanIndexText.textContent = i + 1;-->
+<!--                    let index = $('#board__index1').css('color', 'red');-->
+
+<!--                    aIndex.appendChild(spanIndexText);-->
+<!--                    indexContainer.appendChild(aIndex);-->
+
+<!--                    aIndex.addEventListener('click', () => {-->
+<!--                        showBoardListsNewPage(i);-->
+<!--                    });-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    /*-->
+<!--        추가 게시글 리스트 출력-->
+<!--    */-->
+<!--    function showBoardListsNewPage(pageIndex) {-->
+<!--        boardTableBody.textContent = '';-->
+<!--        const lists = JSON.parse(localStorage.getItem(BOARD));-->
+<!--        const limitPage = pageIndex * 5;-->
+<!--        const indexList = $('.board__index');-->
+
+<!--        for (let idx = 0; idx < indexList.length; idx++) {-->
+<!--            let index = $(`#board__index${idx + 1}`).css('color', 'black');-->
+<!--        }-->
+
+<!--        let index = $(`#board__index${pageIndex + 1}`).css('color', 'red');-->
+
+
+<!--        lists.reverse();-->
+<!--        lists.forEach((list, index) => {-->
+<!--            if (index >= limitPage && index < limitPage + 5) {-->
+<!--                const tr = document.createElement('tr');-->
+<!--                tr.classList.add('board__content');-->
+<!--                tr.style.height = '50px';-->
+<!--                tr.style.borderBottom = '1px solid gray';-->
+
+<!--                const tdNum = document.createElement('td');-->
+<!--                tdNum.classList.add('board__content-column');-->
+<!--                tdNum.textContent = list.num;-->
+<!--                tdNum.style.width = '10%';-->
+
+<!--                const aTitle = document.createElement('a');-->
+<!--                aTitle.textContent = list.title;-->
+<!--                // aTitle.href = '#';-->
+<!--                aTitle.id = `link-to-content${list.num}`;-->
+
+<!--                const tdTitle = document.createElement('td');-->
+<!--                tdTitle.classList.add('board__content-column');-->
+<!--                tdTitle.style.textAlign = 'left';-->
+<!--                tdTitle.style.width = '50%';-->
+
+<!--                tdTitle.appendChild(aTitle);-->
+
+<!--                const tdAuthor = document.createElement('td');-->
+<!--                tdAuthor.classList.add('board__content-column');-->
+<!--                tdAuthor.textContent = list.author;-->
+<!--                tdAuthor.style.width = '15%';-->
+
+<!--                const tdDate = document.createElement('td');-->
+<!--                tdDate.classList.add('board__content-column');-->
+<!--                tdDate.textContent = list.date;-->
+<!--                tdAuthor.style.width = '15%';-->
+
+<!--                const tdViews = document.createElement('td');-->
+<!--                tdViews.classList.add('board__content-column');-->
+<!--                tdViews.textContent = list.views;-->
+<!--                tdViews.style.width = '10%';-->
+
+<!--                tr.appendChild(tdNum);-->
+<!--                tr.appendChild(tdTitle);-->
+<!--                tr.appendChild(tdAuthor);-->
+<!--                tr.appendChild(tdDate);-->
+<!--                tr.appendChild(tdViews);-->
+
+<!--                boardTableBody.appendChild(tr);-->
+<!--                const linkToContent = document.querySelector(-->
+<!--                        `#link-to-content${list.num}`-->
+<!--                );-->
+
+<!--                linkToContent.addEventListener('click', onTitleClick);-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    /*-->
+<!--        list 초기화-->
+<!--        페이지네이션 테스트-->
+<!--    */-->
+<!--    function initList() {-->
+<!--        let date = new Date();-->
+<!--        let views = 0;-->
+<!--        let nums = 0;-->
+<!--        const objArr = [];-->
+<!--        const lists = JSON.parse(localStorage.getItem(BOARD));-->
+
+<!--        if (!lists) {-->
+<!--            nums = 1;-->
+<!--        } else {-->
+<!--            nums = parseInt(lists[lists.length - 1].num) + 1;-->
+<!--        }-->
+
+<!--        let cnt;-->
+<!--        for (cnt = 1; cnt < 20; cnt++) {-->
+<!--            objArr.push({-->
+<!--                num: `${nums}`,-->
+<!--                title: `test title ${nums}`,-->
+<!--                author: `test author ${nums}`,-->
+<!--                content: `test content ${nums}`,-->
+<!--                views: 0,-->
+<!--                date: `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`,-->
+<!--            });-->
+<!--            nums++-->
+<!--        }-->
+<!--        localStorage.setItem(BOARD, JSON.stringify(objArr));-->
+<!--    }-->
+
+<!--    /*-->
+<!--        화면 새로고침 할 때 실행될 함수 선언-->
+<!--    */-->
+<!--    window.onload = function () {-->
+<!--        emptyCheck();-->
+<!--        // assignIndex();-->
+<!--        // initList()-->
+<!--        showBoardLists();-->
+<!--    }-->
+<!--</script>-->
+
+</html>

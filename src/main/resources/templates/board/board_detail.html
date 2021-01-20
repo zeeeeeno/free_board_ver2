@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout/default">
+<body>
+<div layout:fragment="board">
+    <div id="container">
+        <div class="detail_board" id="detail_board">
+            <table id="detail_table">
+                <tr id="detail_table_trTop">
+                    <td>제목</td>
+                    <td th:text="${board.title}"></td>
+                    <td>작성자</td>
+                    <td th:text="${board.author}"></td>
+                </tr>
+                <tr>
+                    <td>조회수</td>
+                    <td th:text="${board.views}"></td>
+                    <td>날짜</td>
+                    <td th:text="${board.modifyTime}"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="detail_board_contents_area" id="detail_board_contents_area">
+            <div class="detail_contents_info" id="detail_contents_info">
+                <div>
+                    <textarea th:text="${board.contents}"></textarea>
+                </div>
+            </div>
+        </div>
+        <div id="detail_board_btn_area">
+            <div id="update_delete_btn">
+                <button type="submit_modify" class="button button1" onclick="modify()">수정</button>
+                <button type="submit_delete" class="button button2" onclick="remove()">삭제</button>
+            </div>
+            <div id="update_btn_area">
+                <button type="submit_modify" class="button button1" onclick="update()">완료</button>
+                <button type="submit_delete" class="button button2" onclick="cancel()">취소</button>
+            </div>
+            <div>
+                <button type="list" class="button button3" onclick="location.href='board_list.html'">목록</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const boardIndexKey = "clickBoardNum";
+    const boardIndex = localStorage.getItem(boardIndexKey);
+    const BOARD = 'board';
+
+    const detailBoardTable = document.querySelector('#detail_board');
+    const detailBoardContents = document.querySelector('#detail_contents_info');
+
+    /*
+        게시글 상세내용 출력
+    */
+    function loadBoardDetail() {
+        const lists = JSON.parse(localStorage.getItem(BOARD));
+        const idx = boardIndex;
+
+        const table = document.createElement('table');
+        table.classList.add('detail_table')
+
+        const thead = document.createElement('thead');
+        thead.classList.add('detail_thead')
+
+        const trFir = document.createElement('tr');
+        trFir.classList.add('trFir')
+        trFir.style.borderTop = '4px solid rgb(200, 200, 200)';
+
+        const tdTitle = document.createElement('td');
+        tdTitle.classList.add('tdTitle')
+        tdTitle.textContent = "제목"
+        tdTitle.style.borderRight = '1px solid rgb(200, 200, 200)';
+        tdTitle.style.borderBottom = '1px solid rgb(200, 200, 200)';
+        tdTitle.style.borderLeft = '0px solid black';
+        tdTitle.style.width = '15%';
+
+        const tdTitleInput = document.createElement('td');
+        tdTitleInput.classList.add('tdTitleInput');
+        tdTitleInput.textContent = lists[idx].title;
+        tdTitleInput.style.borderRight = '1px solid rgb(200, 200, 200)';
+        tdTitleInput.style.borderBottom = '1px solid rgb(200, 200, 200)';
+        tdTitleInput.style.width = '35%';
+
+        const tdWriter = document.createElement('td');
+        tdWriter.classList.add('tdWriter')
+        tdWriter.textContent = "작성자"
+        tdWriter.style.borderRight = '1px solid rgb(200, 200, 200)';
+        tdWriter.style.borderBottom = '1px solid rgb(200, 200, 200)';
+        tdWriter.style.width = '15%';
+
+        const tdWriterInput = document.createElement('td');
+        tdWriterInput.classList.add('tdTitleInput')
+        tdWriterInput.textContent = lists[idx].author
+        tdWriterInput.style.padding = '10px';
+
+        const trSec = document.createElement('tr');
+        trSec.classList.add('detail_trSec');
+        trSec.style.borderTop = '1px solid rgb(200, 200, 200)';
+        trSec.style.borderBottom = '4px solid rgb(200, 200, 200)';
+
+        const tdView = document.createElement('td');
+        tdView.classList.add('tdView')
+        tdView.textContent = "조회수"
+        tdView.style.borderRight = '1px solid rgb(200, 200, 200)';
+        tdView.style.padding = '10px';
+
+        const tdViewInput = document.createElement('td');
+        tdViewInput.classList.add('tdViewInput')
+        tdViewInput.textContent = lists[idx].views
+        tdViewInput.style.borderRight = '1px solid rgb(200, 200, 200)';
+
+        const tdDate = document.createElement('td');
+        tdDate.classList.add('tdDate')
+        tdDate.textContent = "날짜"
+        tdDate.style.borderRight = '1px solid rgb(200, 200, 200)';
+
+        const tdDateInput = document.createElement('td');
+        tdDateInput.classList.add('tdTitleInput')
+        tdDateInput.textContent = lists[idx].date
+
+        trFir.appendChild(tdTitle);
+        trFir.appendChild(tdTitleInput);
+        trFir.appendChild(tdWriter);
+        trFir.appendChild(tdWriterInput);
+
+        trSec.appendChild(tdView);
+        trSec.appendChild(tdViewInput);
+        trSec.appendChild(tdDate);
+        trSec.appendChild(tdDateInput);
+
+        thead.appendChild(trFir);
+        thead.appendChild(trSec);
+
+        table.appendChild(thead);
+
+        detailBoardTable.appendChild(table);
+
+        const contentsContent = document.createElement('div');
+        contentsContent.classList.add('contents__content');
+
+        const contentsInput = document.createElement('textarea');
+        contentsInput.classList.add('contents__input');
+        contentsInput.value = lists[idx].content;
+        contentsInput.style.border = 'none';
+        contentsInput.style.height = '96%';
+        contentsInput.style.width = '99%';
+        contentsInput.style.background = 'none';
+        contentsInput.disabled = true;
+
+        contentsContent.appendChild(contentsInput);
+        detailBoardContents.appendChild(contentsContent);
+    }
+
+    /*
+        게시글 수정 화면 전환
+    */
+    function modify() {
+        let contentsInput = $('.contents__input').attr('disabled', false);
+        contentsInput = $('.contents__input').css('border', 'solid 5px #FFE4B5');
+
+        let btnArea_updDel = $('#update_delete_btn').css('display', 'none');
+
+        let btnArea_upd = $('#update_btn_area').css('display', 'block');
+        btnArea_upd = $('#update_btn_area').css('width', '16%');
+        btnArea_upd = $('#update_btn_area').css('margin', '0px auto');
+    }
+
+    /*
+        게시글 수정
+    */
+    function update() {
+        const BOARD = 'board';
+        const clickBoardNum = 'clickBoardNum';
+        const boardIndexUpd = localStorage.getItem(clickBoardNum);
+
+        const updContentInput = $('.contents__input').val();
+
+        let lists = JSON.parse(localStorage.getItem(BOARD));
+        const idx = boardIndexUpd;
+
+        const updContents = updContentInput;
+        lists[idx].content = updContents
+
+        localStorage.setItem(BOARD, JSON.stringify(lists));
+
+        window.location.replace("./board_detail.html");
+    }
+
+    /*
+        게시글 삭제
+    */
+    function remove() {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+            let lists = JSON.parse(localStorage.getItem(BOARD));
+            const idxDelete = boardIndex;
+
+            console.log(delete lists[idxDelete]);
+
+            let newLists = [];
+
+            lists.forEach(element => {
+                console.log(element)
+                if (element != null) {
+                    newLists.push(element);
+                }
+            });
+
+            localStorage.setItem(BOARD, JSON.stringify(newLists));
+
+            window.location.replace("./board_list.html");
+        } else {
+            return false;
+        }
+    }
+
+    /*
+        게시글 수정 취소
+     */
+    function cancel() {
+        let contentsInput = $('.contents__input').attr('disabled', true);
+        contentsInput = $('.contents__input').css('border', 'none');
+
+        let btnArea_updDel = $('#update_delete_btn').css('display', 'block');
+        let btnArea_upd = $('#update_btn_area').css('display', 'none');
+    }
+
+    window.onload = function () {
+        loadBoardDetail();
+    }
+</script>
+
+</html>

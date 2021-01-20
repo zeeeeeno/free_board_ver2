@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout/default">
+<body>
+<div layout:fragment="board">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <div id="container">
+        <div>
+            <h3>글 작성</h3>
+        </div>
+        <hr>
+        <div id="contents">
+            <form id="board_write">
+                <div id="contents_header">
+                    <div class="content_header">
+                        <p>제목</p>
+                        <input type="text" id="board_title" placeholder="제목을 입력하세요.">
+                    </div>
+                    <div class="content_header">
+                        <p>작성자</p>
+                        <input type="text" id="board_author" placeholder="작성자를 입력하세요.">
+                    </div>
+                </div>
+                <div class="content">
+                    <p>내용</p>
+                    <textarea type="textarea" id="board_contents" placeholder="내용을 입력하세요."></textarea>
+                </div>
+                <div id="btn-content">
+                    <div class="btn_area">
+                        <input type="submit" value="작성">
+                    </div>
+                    <div class="btn_area">
+                        <input type="button" value="취소" onclick="location.href='./board_list.html'">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const replacerFunc = () => {
+            const visited = new WeakSet();
+            return (key, value) => {
+                if (typeof value === "object" && value !== null) {
+                    if (visited.has(value)) {
+                        return;
+                    }
+                    visited.add(value);
+                }
+                return value;
+            };
+        };
+
+        $('#board_write').on('submit', function (event) {
+            // Prevent the page from reloading
+            event.preventDefault();
+
+            let title = $("#board_title").val();
+            let author = $("#board_author").val();
+            let contents = $("#board_contents").val();
+
+            if (title === '' || author === '' || contents === '') {
+                alert('빈칸이 존재합니다.');
+                return;
+            }
+
+            let board = [];
+            board.push({
+                title: title,
+                author: author,
+                contents: contents
+            })
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/board/insert",
+                data: JSON.stringify(board, replacerFunc()),
+                dataType: 'text',
+                cache: false,
+                async: false,
+                success: function (data) {
+                    alert('게시글 등록: ' + data);
+                    window.location.href = "/board/list";
+                },
+                error: function (request,status,error) {
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                    window.location.replace = "/board/write";
+                }
+            })
+        });
+    </script>
+</div>
+</body>
+</html>

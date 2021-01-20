@@ -1,35 +1,43 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.Board;
+import com.example.demo.repository.BoardRepository;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.util.List;
 
 @Log
 @Service
 @Transactional
 public class BookServiceImpl implements BookService {
-    @Override
-    public ArrayList<Board> loadBoradList() throws Exception {
-        log.info("BookServiceImpl - loadBoradList()");
+    @Autowired
+    BoardRepository bookRepository;
 
-        return null;
+    @Override
+    public List<Board> loadBoradList() throws Exception {
+        log.info("BookServiceImpl - loadBoardList()");
+
+        return bookRepository.loadBoardList();
     }
 
     @Override
-    public Board readDetailBoard() throws Exception {
-        return null;
+    public Board readDetailBoard(String boardNo) throws Exception {
+        log.info("BookServiceImpl - readDetailBoard()");
+
+        return bookRepository.readBoard(boardNo);
     }
 
     @Override
-    public void insertBorad(Board board) throws Exception {
-
+    public void insertBoard(Board board) throws Exception {
+        log.info("BookServiceImpl - insertBoard() board: " + board);
+        bookRepository.insertBoard(board);
     }
 
     @Override
-    public void updateBoard(String contents) throws Exception {
+    public void updateBoard(Board board) throws Exception {
 
     }
 
