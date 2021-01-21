@@ -18,5 +18,6 @@ public class DemoApplication {
         System.out.println("init()");
         BoardRepository boardRepository = new BoardRepository();
         boardRepository.createTable();
+        boardRepository.initTuple();
     }
 }
