@@ -1,24 +1,25 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.Board;
-import com.example.demo.domain.Page;
-import com.example.demo.service.BoardService;
+import java.util.Date;
+import java.util.List;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.Cookie;
+import java.text.SimpleDateFormat;
+import com.example.demo.domain.Page;
+import com.example.demo.domain.Board;
+import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
+import com.example.demo.service.BoardService;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 @Log
 @Controller
 @RequestMapping("board")
+@RequiredArgsConstructor
 public class BoardController {
 
     private ModelAndView modelAndView;
@@ -26,9 +27,14 @@ public class BoardController {
     private SimpleDateFormat sdf;
     private Board board;
 
-    @Autowired
     BoardService bookService;
 
+    /**
+     * 게시글 가져오기
+     * @param request: request
+     * @return 게시글 목록 페이지
+     * @throws Exception: 오류 체크
+     */
     @GetMapping("list")
     public ModelAndView loadBoardList(HttpServletRequest request) throws Exception {
         log.info("BoardController - loadBoardList()");
@@ -39,7 +45,7 @@ public class BoardController {
         try {
             num = Integer.parseInt(request.getParameter("num"));
         } catch (Exception e) {
-            log.info("num값 미지정");
+            log.info("num 값 미지정");
         }
 
         Page page = new Page();
@@ -47,7 +53,7 @@ public class BoardController {
         int boardSize = bookService.boardCount();
         page.setCount(boardSize);
 
-        List<Board> boardArrayList = bookService.loadBoradList(page.getDisplayPost(), page.getPostNum());
+        List<Board> boardArrayList = bookService.loadBoardList(page.getDisplayPost(), page.getPostNum());
         modelAndView.addObject("boardList", boardArrayList);
         modelAndView.addObject("select", num);
         modelAndView.addObject("page", page);
@@ -58,6 +64,10 @@ public class BoardController {
         return modelAndView;
     }
 
+    /**
+     * 게시글 작성
+     * @return 게시글 작성 페이지
+     */
     @GetMapping("write")
     public ModelAndView writeBoard() {
         log.info("BoardController - writeBoard()");
@@ -68,14 +78,19 @@ public class BoardController {
         return modelAndView;
     }
 
-    @PostMapping("insert")
+    /**
+     * 게시글 작성
+     * @param boardList: 게시글
+     * @return 게시글 삽입 결과
+     */
     @ResponseBody
-    public String insertBoard(@RequestBody List<Board> boardParam) throws Exception {
-        log.info("BoardController - writeBoard() board: " + boardParam.get(0));
+    @PostMapping("insert")
+    public String insertBoard(@RequestBody List<Board> boardList) {
+        log.info("BoardController - writeBoard() board: " + boardList.get(0));
 
         date = new Date();
         sdf = new SimpleDateFormat("yyyy-MM-dd");
-        board = boardParam.get(0);
+        board = boardList.get(0);
 
         board.setViews("0");
         board.setUseYN("1");
@@ -92,6 +107,14 @@ public class BoardController {
         return "success!!";
     }
 
+    /**
+     * 게시글 상세 내용 출력
+     * @param boardNo: 게시글 번호
+     * @param request: request
+     * @param response: response
+     * @return 게시글 상세 내용 페이지
+     * @throws Exception: 오류 체크
+     */
     @GetMapping("detail/{boardNo}")
     public ModelAndView readBoard(@PathVariable("boardNo") String boardNo, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.info("BoardController - readBoard() boardNo: " + boardNo);
@@ -127,9 +150,14 @@ public class BoardController {
         return modelAndView;
     }
 
-    @PostMapping("update")
+    /**
+     * 게시글 수정
+     * @param board: 게시글
+     * @return 게시글 수정 여부
+     */
     @ResponseBody
-    public String updateBoard(@RequestBody List<Board> board) throws Exception {
+    @PostMapping("update")
+    public String updateBoard(@RequestBody List<Board> board) {
         log.info("BoardController - updateBoard() board: " + board.get(0));
 
         date = new Date();
@@ -148,9 +176,14 @@ public class BoardController {
         return "success!!";
     }
 
-    @PostMapping("delete")
+    /**
+     * 게시글 삭제
+     * @param boardNo: 게시글 번호
+     * @return 게시글 삭제 여부
+     */
     @ResponseBody
-    public String deleteBoard(@RequestBody String boardNo) throws Exception {
+    @PostMapping("delete")
+    public String deleteBoard(@RequestBody String boardNo) {
         log.info("BoardController - deleteBoard() boardNo: " + boardNo);
 
         try {

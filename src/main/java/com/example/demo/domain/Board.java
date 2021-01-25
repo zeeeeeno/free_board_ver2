@@ -1,12 +1,10 @@
 package com.example.demo.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * create table board

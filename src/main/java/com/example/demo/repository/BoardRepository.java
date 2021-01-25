@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.Board;
-import com.example.demo.domain.Page;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,18 +16,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Log
 @Repository
+@SuppressWarnings("ALL")
 public class BoardRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void createTable() throws Exception {
+    /**
+     * 테이블 생성
+     */
+    public void createTable() {
         log.info("BoardRepository - createTable()");
         SingleConnectionDataSource ds = new SingleConnectionDataSource();
         ds.setDriverClassName("org.h2.Driver");
@@ -54,15 +56,18 @@ public class BoardRepository {
         jdbcTemplate.execute(query);
     }
 
+    /**
+     * 테스트 데이터 삽입
+     * @throws Exception: 에러체크
+     */
     public void initTuple() throws Exception {
         log.info("BoardRepository - initTuple()");
-        String query = "";
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         for (int idx = 1; idx < 21; idx++) {
-            query = "INSERT INTO board (title, author, contents, views, currentTime, modifyTime, useYN) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            String query = "INSERT INTO board (title, author, contents, views, currentTime, modifyTime, useYN) VALUES (?, ?, ?, ?, ?, ?, ?);";
             String title = "title" + idx;
             String author = "author" + idx;
             String contents = "contents" + idx;
@@ -75,6 +80,11 @@ public class BoardRepository {
         }
     }
 
+    /**
+     * 총 게시글 수 계산
+     * @return: 총 테이블 게시글 수 - 삭제 된 게시글 수
+     * @throws Exception: 에러 체크
+     */
     public int boardCount() throws Exception {
         log.info("BoardRepository - boardCount()");
 
@@ -83,6 +93,13 @@ public class BoardRepository {
         return size;
     }
 
+    /**
+     * 게시글 리스트 가져오기
+     * @param displayPost
+     * @param postNum
+     * @return
+     * @throws Exception
+     */
     public List<Board> loadBoardList(int displayPost, int postNum) throws Exception {
         log.info("BoardRepository - loadBoardList()");
 
@@ -109,6 +126,11 @@ public class BoardRepository {
         return results;
     }
 
+    /**
+     * 게시글 등록
+     * @param board: 등록할 게시글
+     * @throws Exception: 오류 체크
+     */
     public void insertBoard(Board board) throws Exception {
         log.info("BoardRepository - insertBoard() board: " + board);
 
@@ -136,6 +158,12 @@ public class BoardRepository {
         board.setBoardNo(keyHolder.getKey().toString());
     }
 
+    /**
+     * 게시글 상세 내용 가져오기
+     * @param boardNo: 게시글 번호
+     * @return 게시글
+     * @throws Exception: 오류 체크
+     */
     public Board readBoard(String boardNo) throws Exception {
         log.info("BoardRepository - readBoard() boardNo: " + boardNo);
         List<Board> results = jdbcTemplate.query(
@@ -164,6 +192,11 @@ public class BoardRepository {
         return results.isEmpty() ? null : results.get(0);
     }
 
+    /**
+     * 게시글 조회수 가져오기
+     * @param boardNo: 게시글 번호
+     * @throws Exception: 오류 체크
+     */
     public void countView(String boardNo) throws Exception {
         log.info("BoardRepository - countView() boardNo: " + boardNo);
 
@@ -171,6 +204,11 @@ public class BoardRepository {
         jdbcTemplate.update(query, boardNo);
     }
 
+    /**
+     * 게시글 수정
+     * @param board: 수정할 게시글
+     * @throws Exception: 오류체크
+     */
     public void updateBoard(Board board) throws Exception {
         log.info("BoardRepository - updateBoard() board: " + board);
 
@@ -178,6 +216,11 @@ public class BoardRepository {
         jdbcTemplate.update(query, board.getContents(), board.getModifyTime(), board.getBoardNo());
     }
 
+    /**
+     * 게시글 삭제
+     * @param boardNo: 게시글 번호
+     * @throws Exception: 오류 체크
+     */
     public void deleteBoard(String boardNo) throws Exception {
         log.info("BoardRepository - deleteBoard() boardNo: " + boardNo);
 
