@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletRequest;
 import com.example.demo.service.BoardService;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,15 +21,18 @@ import org.springframework.web.servlet.ModelAndView;
 @Log
 @Controller
 @RequestMapping("board")
-@RequiredArgsConstructor
 public class BoardController {
 
-    private ModelAndView modelAndView;
     private Date date;
-    private SimpleDateFormat sdf;
     private Board board;
+    private SimpleDateFormat sdf;
+    private ModelAndView modelAndView;
+    private final BoardService bookService;
 
-    BoardService bookService;
+    @Autowired
+    public BoardController(BoardService bookService) {
+        this.bookService = bookService;
+    }
 
     /**
      * 게시글 가져오기

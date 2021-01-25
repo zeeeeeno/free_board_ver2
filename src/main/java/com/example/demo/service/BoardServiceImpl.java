@@ -4,6 +4,7 @@ import com.example.demo.domain.Board;
 import com.example.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,10 +13,14 @@ import java.util.List;
 @Log
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
+
+    @Autowired
+    public BoardServiceImpl(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
 
     /**
      * 게시판 리스트 가져오기
