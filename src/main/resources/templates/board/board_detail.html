@@ -40,7 +40,7 @@
                 <button type="submit_delete" class="button button2" onclick="cancel()">취소</button>
             </div>
             <div style="height: 50px;">
-                <button type="list" class="button button3" onclick="location.href='/board/list'">목록</button>
+                <button type="list" onclick="location.href='/board/list'">목록</button>
             </div>
         </div>
     </div>
@@ -92,7 +92,6 @@
             })
 
             const locationHref = "/board/detail/" + boardNo;
-            alert('locationHref: ' + locationHref);
 
             $.ajax({
                 type: "POST",
@@ -103,7 +102,7 @@
                 cache: false,
                 async: false,
                 success: function (data) {
-                    alert('게시글 수정: ' + data);
+                    alert('게시글 수정 완료!!');
                     location.reload();
                 },
                 error: function (request,status,error) {
@@ -138,7 +137,7 @@
                     cache: false,
                     async: false,
                     success: function (data) {
-                        alert('게시글 삭제: ' + data);
+                        alert('게시글 삭제 완료!!');
                         window.location.href = "/board/list";
                     },
                     error: function (request,status,error) {

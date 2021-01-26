@@ -7,7 +7,6 @@ import javax.servlet.http.Cookie;
 import java.text.SimpleDateFormat;
 import com.example.demo.domain.Page;
 import com.example.demo.domain.Board;
-import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletRequest;
 import com.example.demo.service.BoardService;
 import javax.servlet.http.HttpServletResponse;
