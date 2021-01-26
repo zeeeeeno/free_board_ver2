@@ -13,10 +13,10 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void init() throws Exception {
-        BoardRepository boardRepository = new BoardRepository();
-        boardRepository.createTable();
-        boardRepository.initTuple();
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void init() throws Exception {
+//        BoardRepository boardRepository = new BoardRepository();
+//        boardRepository.createTable();
+//        boardRepository.initTuple();
+//    }
 }

@@ -7,11 +7,14 @@ spring:
       enabled: true
     profiles:
       active: local
+      
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     username: sa
     password:
+    data: classpath:static/assets/initDatabse.sql
+
   thymeleaf:
     enabled: true
     prefix: classpath:templates/
@@ -19,10 +22,12 @@ spring:
     suffix: .html
     mode: HTML
     cache: false
+
   devtools:
     livereload:
       enabled: true
     restart:
       enabled: true
+
   freemarker:
     cache: false
