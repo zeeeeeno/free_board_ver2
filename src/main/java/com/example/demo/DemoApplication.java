@@ -15,7 +15,6 @@ public class DemoApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() throws Exception {
-        System.out.println("init()");
         BoardRepository boardRepository = new BoardRepository();
         boardRepository.createTable();
         boardRepository.initTuple();

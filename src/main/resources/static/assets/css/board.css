@@ -14,8 +14,8 @@ header {
 footer {
     width: 100%;
     line-height: 80px;
-    border-top: 5px solid rgba(0, 153, 153, 1);
     color: rgb(120, 120, 120);
+    display: flex;
     text-align: center;
     vertical-align: middle;
     background-color: rgba(0, 153, 153, 1);
@@ -24,11 +24,12 @@ footer {
 footer > p {
     color: white;
     font-size: large;
+    margin: 0 auto;
 }
 
 #container {
     padding: 15px 200px 15px 200px;
-    height: 520px;
+    height: 526px;
 }
 
 #contents {
@@ -198,12 +199,12 @@ tr {
 .button {
     border: none;
     color: white;
-    padding: 10px 25px;
+    padding: 1em 2em;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 0 auto;
     cursor: pointer;
     border-radius: 4vh;
 }
@@ -219,7 +220,7 @@ tr {
 
 #update_delete_btn{
     margin: 0 auto;
-    width: 16%;
+    width: fit-content;
 }
 
 #update_btn_area {
