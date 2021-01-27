@@ -83,8 +83,14 @@
                 cache: false,
                 async: false,
                 success: function (data) {
-                    alert('게시글 등록!!');
-                    window.location.href = "/board/list";
+                    if (data === "fail!!") {
+                        alert('등록 실패!!');
+                        location.reload();
+                        return;
+                    } else {
+                        alert('게시글 등록!!');
+                        window.location.href = "/board/list";
+                    }
                 },
                 error: function (request,status,error) {
                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

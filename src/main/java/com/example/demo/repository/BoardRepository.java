@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Log
@@ -28,67 +25,19 @@ public class BoardRepository {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * 테이블 생성
-     */
-    public void createTable() {
-        log.info("BoardRepository - createTable()");
-        SingleConnectionDataSource ds = new SingleConnectionDataSource();
-        ds.setDriverClassName("org.h2.Driver");
-        ds.setUrl("jdbc:h2:mem:testdb");
-        ds.setUsername("sa");
-        ds.setPassword("");
-
-        jdbcTemplate = new JdbcTemplate(ds);
-
-        String query = "CREATE TABLE board" +
-                "(" +
-                "boardNo integer not null auto_increment," +
-                "title varchar(50) not null," +
-                "author varchar(20) not null," +
-                "contents varchar(1000) not null," +
-                "views integer not null," +
-                "currentTime date," +
-                "modifyTime date," +
-                "useYN varchar(10) not null," +
-                "primary key(boardNo)" +
-                ");";
-
-        jdbcTemplate.execute(query);
-    }
-
-    /**
-     * 테스트 데이터 삽입
-     * @throws Exception: 에러체크
-     */
-    public void initTuple() throws Exception {
-        log.info("BoardRepository - initTuple()");
-
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        for (int idx = 1; idx < 21; idx++) {
-            String query = "INSERT INTO board (title, author, contents, views, currentTime, modifyTime, useYN) VALUES (?, ?, ?, ?, ?, ?, ?);";
-            String title = "title" + idx;
-            String author = "author" + idx;
-            String contents = "contents" + idx;
-            int views = 0;
-            String currentTime = sdf.format(date);
-            String modifyTime = sdf.format(date);
-            String useYN = "1";
-
-            jdbcTemplate.update(query, title, author, contents, views, currentTime, modifyTime, useYN);
-        }
-    }
-
-    /**
      * 총 게시글 수 계산
      * @return: 총 테이블 게시글 수 - 삭제 된 게시글 수
      * @throws Exception: 에러 체크
      */
     public int boardCount() throws Exception {
         log.info("BoardRepository - boardCount()");
+        int size = 0;
 
-        int size = jdbcTemplate.queryForObject("SELECT count(boardNo) FROM board WHERE useYN = 1", Integer.class);
+        try {
+            size = jdbcTemplate.queryForObject("SELECT count(boardNo) FROM board WHERE useYN = 1", Integer.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return size;
     }
@@ -116,8 +65,8 @@ public class BoardRepository {
                         board.setAuthor(rs.getString("author"));
                         board.setContents(rs.getString("contents"));
                         board.setViews(rs.getString("views"));
-                        board.setCurrentTime(rs.getString("currentTime"));
-                        board.setModifyTime(rs.getString("modifyTime"));
+                        board.setCreateTime(rs.getDate("createTime"));
+                        board.setUpdateTime(rs.getDate("updateTime"));
                         board.setUseYN(rs.getString("useYN"));
                         return board;
                     }
@@ -134,7 +83,7 @@ public class BoardRepository {
     public void insertBoard(Board board) throws Exception {
         log.info("BoardRepository - insertBoard() board: " + board);
 
-        String query = "INSERT INTO board (title, author, contents, views, currentTime, modifyTime, useYN) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO board (title, author, contents) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
@@ -146,10 +95,6 @@ public class BoardRepository {
                         ps.setString(1, board.getTitle());
                         ps.setString(2, board.getAuthor());
                         ps.setString(3, board.getContents());
-                        ps.setString(4, board.getViews());
-                        ps.setString(5, board.getCurrentTime());
-                        ps.setString(6, board.getModifyTime());
-                        ps.setString(7, board.getUseYN());
 
                         return ps;
                     }
@@ -167,7 +112,7 @@ public class BoardRepository {
     public Board readBoard(String boardNo) throws Exception {
         log.info("BoardRepository - readBoard() boardNo: " + boardNo);
         List<Board> results = jdbcTemplate.query(
-                "SELECT boardNo, title, author, contents, views, currentTime, modifyTime, useYN " +
+                "SELECT boardNo, title, author, contents, views, createTime, updateTime, useYN " +
                         "FROM board WHERE boardNo = ?",
                 new RowMapper<Board>() {
                     @Override
@@ -180,8 +125,8 @@ public class BoardRepository {
                         board.setAuthor(rs.getString("author"));
                         board.setContents(rs.getString("contents"));
                         board.setViews(rs.getString("views"));
-                        board.setCurrentTime(rs.getString("currentTime"));
-                        board.setModifyTime(rs.getString("modifyTime"));
+                        board.setCreateTime(rs.getDate("createTime"));
+                        board.setUpdateTime(rs.getDate("updateTime"));
                         board.setUseYN(rs.getString("useYN"));
 
                         return board;
@@ -212,8 +157,8 @@ public class BoardRepository {
     public void updateBoard(Board board) throws Exception {
         log.info("BoardRepository - updateBoard() board: " + board);
 
-        String query = "UPDATE board SET contents = ?, MODIFYTIME = ? WHERE boardNo = ?";
-        jdbcTemplate.update(query, board.getContents(), board.getModifyTime(), board.getBoardNo());
+        String query = "UPDATE board SET contents = ? WHERE boardNo = ?";
+        jdbcTemplate.update(query, board.getContents(), board.getBoardNo());
     }
 
     /**

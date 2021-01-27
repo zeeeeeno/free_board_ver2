@@ -19,7 +19,7 @@
                     <td>조회수</td>
                     <td class="tr_bottom_td" th:text="${board.views}"></td>
                     <td class="tr_bottom_td">날짜</td>
-                    <td th:text="${board.modifyTime}"></td>
+                    <td th:text="${board.updateTime}"></td>
                 </tr>
             </table>
         </div>
@@ -61,8 +61,6 @@
 
             let btnArea_upd = $('#update_btn_area');
             btnArea_upd.css('display', 'block');
-            btnArea_upd.css('width', '16%');
-            btnArea_upd.css('margin', '0px auto');
         }
 
         const replacerFunc = () => {

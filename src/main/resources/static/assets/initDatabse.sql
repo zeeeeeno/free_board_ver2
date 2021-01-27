@@ -1,5 +1,5 @@
 CREATE TABLE board (
-                       boardNo VARCHAR2(10) AUTO_INCREMENT NOT NULL,
+                       boardNo INT (10) AUTO_INCREMENT NOT NULL,
                        title VARCHAR2(100) NOT NULL,
                        author VARCHAR2(20) NOT NULL,
                        contents VARCHAR2(5000) NOT NULL,

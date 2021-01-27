@@ -1,10 +1,9 @@
 package com.example.demo.controller;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import lombok.extern.java.Log;
 import javax.servlet.http.Cookie;
-import java.text.SimpleDateFormat;
 import com.example.demo.domain.Page;
 import com.example.demo.domain.Board;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("board")
 public class BoardController {
 
-    private Date date;
     private Board board;
-    private SimpleDateFormat sdf;
     private ModelAndView modelAndView;
     private final BoardService bookService;
 
@@ -35,31 +32,28 @@ public class BoardController {
 
     /**
      * 게시글 가져오기
-     * @param request: request
      * @return 게시글 목록 페이지
-     * @throws Exception: 오류 체크
      */
     @GetMapping("list")
-    public ModelAndView loadBoardList(HttpServletRequest request) throws Exception {
+    public ModelAndView loadBoardList(@RequestParam(value = "num", defaultValue = "1") int numParam) {
         log.info("BoardController - loadBoardList()");
 
         modelAndView = new ModelAndView();
-        int num = 1;
+        Page page = new Page();
+        int boardSize = 0;
 
         try {
-            num = Integer.parseInt(request.getParameter("num"));
+            page.setNum(numParam);
+            boardSize = bookService.boardCount();
+            page.setCount(boardSize);
+            List<Board> boardArrayList = bookService.loadBoardList(page.getDisplayPost(), page.getPostNum());
+            modelAndView.addObject("boardList", boardArrayList);
+
         } catch (Exception e) {
-            log.info("num 값 미지정");
+            e.printStackTrace();
         }
 
-        Page page = new Page();
-        page.setNum(num);
-        int boardSize = bookService.boardCount();
-        page.setCount(boardSize);
-
-        List<Board> boardArrayList = bookService.loadBoardList(page.getDisplayPost(), page.getPostNum());
-        modelAndView.addObject("boardList", boardArrayList);
-        modelAndView.addObject("select", num);
+        modelAndView.addObject("select", numParam);
         modelAndView.addObject("page", page);
         modelAndView.addObject("boardSize", boardSize);
 
@@ -92,17 +86,8 @@ public class BoardController {
     public String insertBoard(@RequestBody List<Board> boardList) {
         log.info("BoardController - writeBoard() board: " + boardList.get(0));
 
-        date = new Date();
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
-        board = boardList.get(0);
-
-        board.setViews("0");
-        board.setUseYN("1");
-        board.setCurrentTime(sdf.format(date));
-        board.setModifyTime(sdf.format(date));
-
         try {
-            bookService.insertBoard(board);
+            bookService.insertBoard(boardList.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             return "fail!!";
@@ -164,11 +149,7 @@ public class BoardController {
     public String updateBoard(@RequestBody List<Board> board) {
         log.info("BoardController - updateBoard() board: " + board.get(0));
 
-        date = new Date();
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
         Board updateBoard = board.get(0);
-
-        updateBoard.setModifyTime(sdf.format(date));
 
         try {
             bookService.updateBoard(updateBoard);

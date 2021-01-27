@@ -28,22 +28,23 @@
                         </tr>
                         </thead>
                         <tbody class="board__contents" id="board-body">
-                            <tr th:each="board : ${boardList}">
+                            <tr th:if="${boardList} != null" th:each="board : ${boardList}">
                                 <td th:text="${board.boardNo}"></td>
                                 <td>
                                     <a th:text="${board.title}" th:href="@{/board/detail/{boardNo}(boardNo = ${board.boardNo})}"></a>
                                 </td>
                                 <td th:text="${board.author}"></td>
-                                <td th:text="${board.modifyTime}"></td>
+                                <td th:text="${board.updateTime}"></td>
                                 <td th:text="${board.views}"></td>
                             </tr>
-                            <tr th:if="${boardList.size()} == 0">
+                            <tr th:if="${boardList} == null OR ${boardSize} == 0">
                                 <td colspan="5">게시글이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="board_index-container" id="index-container">
                         <div style="text-align: center; width: fit-content; height: 30px; margin: 0px auto;"
+                             th:if="${boardList} != null OR ${boardSize} != 0"
                              th:with="start=${page.startPageNum}, end=${page.endPageNum}">
                             <ul>
                                 <li th:if="${page.prev}" style="list-style-type: none; float: left; margin: 5px;">

@@ -204,7 +204,6 @@ tr {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 0 auto;
     cursor: pointer;
     border-radius: 4vh;
 }
@@ -226,8 +225,7 @@ tr {
 #update_btn_area {
     display: none;
     margin: 0 auto;
-    width: 16%;
-    height: 100%;
+    width: fit-content;
 }
 
 button[type=list] {
