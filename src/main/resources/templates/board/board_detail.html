@@ -26,7 +26,9 @@
         <div class="detail_board_contents_area" id="detail_board_contents_area">
             <div class="detail_contents_info" id="detail_contents_info">
                 <div class="contents_input">
-                    <textarea id="detail_contents_input" th:text="${board.contents}" disabled></textarea>
+                    <div th:utext="${board.contents}"></div>
+<!--                    <div th:text="${board.contents}"></div>-->
+<!--                    <textarea id="detail_contents_input" th:utext="${board.contents}" disabled></textarea>-->
                 </div>
             </div>
         </div>

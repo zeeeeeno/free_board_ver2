@@ -7,6 +7,8 @@
 <body>
     <header th:replace="layout/header :: headerFragment"></header>
     <div layout:fragment="board"></div>
-    <footer th:replace="layout/footer :: footerFragment"></footer>
+    <wrap>
+        <footer th:replace="layout/footer :: footerFragment"></footer>
+    </wrap>
 </body>
 </html>
