@@ -6,6 +6,7 @@
         layout:decorator="layout/default">
 <body>
 <div layout:fragment="board">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <div id="container">
         <div class="detail_board" id="detail_board">
             <table id="detail_table">
@@ -25,44 +26,113 @@
         </div>
         <div class="detail_board_contents_area" id="detail_board_contents_area">
             <div class="detail_contents_info" id="detail_contents_info">
-                <div class="contents_input">
+                <div class="contents_input" style="padding: 0 50px 0 50px;">
                     <div th:utext="${board.contents}"></div>
-<!--                    <div th:text="${board.contents}"></div>-->
-<!--                    <textarea id="detail_contents_input" th:utext="${board.contents}" disabled></textarea>-->
+                </div>
+            </div>
+        </div>
+        <div id="id01" class="modal">
+            <div class="w3-modal-content">
+                <header class="modal-header" style="background-color: #ffffff; border-bottom: none;">
+                    <span onclick="
+                        document.getElementById('id01').style.display='none';
+                        $('.layout_body').css('background', 'none');
+                        window.location.reload();
+                    "
+                            class="w3-display-topright" style="width: 50px; height: 80px;">&times;</span>
+                    <h2 style="margin: 0">게시글 수정</h2>
+                </header>
+                <div class="w3-container">
+                    <label for="ir1" style="display: none">
+                        내용
+                    </label>
+                    <textarea th:utext="${board.contents}" name="ir1" id="ir1" style="width:100%; height:280px;"></textarea>
+                    <div style="width: fit-content; height: fit-content; margin: 0 auto; padding: 10px;">
+                        <button style=" margin: 0 auto" class="button button1" onclick="update()">완료</button>
+                    </div>
                 </div>
             </div>
         </div>
         <div id="detail_board_btn_area">
             <div id="update_delete_btn">
-                <button type="submit_modify" class="button button1" onclick="modify()">수정</button>
-                <button type="submit_delete" class="button button2" onclick="remove()">삭제</button>
+                <button class="button button1" onclick="modify()">수정</button>
+                <button class="button button2" onclick="remove()">삭제</button>
             </div>
             <div id="update_btn_area">
-                <button type="submit_modify" class="button button1" onclick="update()">완료</button>
-                <button type="submit_delete" class="button button2" onclick="cancel()">취소</button>
+                <button class="button button1" onclick="update()">완료</button>
+                <button class="button button2" onclick="cancel()">취소</button>
             </div>
             <div>
-                <button type="list" onclick="location.href='/board/list'">목록</button>
+                <button type="button" onclick="location.href='/board/list'">목록</button>
             </div>
         </div>
     </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        let oEditors = [];
+
+        function modify() {
+            $('#id01').css('display', 'block');
+            $('.layout_body').css('background', 'rgba(0, 0, 0, 0.3)');
+
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef: oEditors,
+                elPlaceHolder: "ir1",
+                //SmartEditor2Skin.html 파일이 존재하는 경로
+                sSkinURI: "/assets/se2/SmartEditor2Skin.html",
+                htParams: {
+                    // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                    bUseToolbar: true,
+                    // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                    bUseVerticalResizer: false,
+                    // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                    bUseModeChanger: false,
+                    fOnBeforeUnload: function () {
+
+                    }
+                },
+                fOnAppLoad: function () {
+                    //textarea 내용을 에디터상에 바로 뿌려주고자 할때 사용
+                    oEditors.getById["ir1"].exec("PASTE_HTML", "hello");
+                },
+                fCreator: "createSEditor2"
+            });
+        }
+
+        function pasteHTML() {
+            var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
+            oEditors.getById["ir1"].exec("PASTE_HTML", [sHTML]);
+        }
+
+        function submitContents(elClickedObj) {
+            oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용됩니다.
+
+            // 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("ir1").value를 이용해서 처리하면 됩니다.
+
+            try {
+                elClickedObj.form.submit();
+            } catch(e) {}
+        }
+
+
+        function setDefaultFont() {
+            let sDefaultFont = '궁서';
+            let nFontSize = 24;
+            oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
+        }
+    </script>
     <script>
         const boardNo = "[[${board.boardNo}]]";
 
-        /*
-            게시글 수정 화면 전환
-        */
-        function modify() {
-            let contentsInput = $('#detail_contents_input');
-            contentsInput.attr('disabled', false);
-            contentsInput.css('border', 'solid 5px #FFE4B5');
+        // Get the modal
+        let modal = document.getElementById('id01');
 
-            $('#update_delete_btn').css('display', 'none');
-
-            let btnArea_upd = $('#update_btn_area');
-            btnArea_upd.css('display', 'block');
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            }
         }
 
         const replacerFunc = () => {
@@ -82,16 +152,15 @@
             게시글 수정
         */
         function update() {
-            let updContentInput = $('#detail_contents_input').val();
+            oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []);
 
+            let updContentInput = document.getElementById("ir1").value;
             let board = [];
 
             board.push({
                 boardNo: boardNo,
                 contents: updContentInput
             })
-
-            const locationHref = "/board/detail/" + boardNo;
 
             $.ajax({
                 type: "POST",
@@ -101,7 +170,7 @@
                 dataType: 'text',
                 cache: false,
                 async: false,
-                success: function (data) {
+                success: function () {
                     alert('게시글 수정 완료!!');
                     location.reload();
                 },
@@ -127,7 +196,7 @@
             게시글 삭제
        */
         function remove() {
-            if (confirm("정말 삭제하시겠습니까??") == true) {
+            if (confirm("정말 삭제하시겠습니까??") === true) {
                 $.ajax({
                     type: "POST",
                     contentType: "application/json",
@@ -136,7 +205,7 @@
                     dataType: 'text',
                     cache: false,
                     async: false,
-                    success: function (data) {
+                    success: function () {
                         alert('게시글 삭제 완료!!');
                         window.location.href = "/board/list";
                     },

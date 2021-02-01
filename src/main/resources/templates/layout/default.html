@@ -4,11 +4,9 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:replace="layout/config :: configFragment"></head>
-<body>
+<body class="layout_body">
     <header th:replace="layout/header :: headerFragment"></header>
-    <div layout:fragment="board"></div>
-    <wrap>
-        <footer th:replace="layout/footer :: footerFragment"></footer>
-    </wrap>
+    <div id="board_body" layout:fragment="board"></div>
+    <footer th:replace="layout/footer :: footerFragment"></footer>
 </body>
 </html>

@@ -14,7 +14,7 @@ spring:
       driver-class-name: org.h2.Driver
       username: sa
       password:
-#      data: classpath:static/assets/initDatabse.sql
+#      data: classpath:static/assets/initDatabase.sql
 #    url: jdbc:h2:mem:testdb
 #    username: sa
 #    password:

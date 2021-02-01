@@ -6,6 +6,7 @@
         xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
 <div layout:fragment="board">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <div id="container">
         <div>
             <h3>글 목록</h3>
@@ -20,11 +21,11 @@
                     <table class="board__table-head" id="table_area">
                         <thead class="board__titles" id="thead_area">
                         <tr class="board__titles">
-                            <th width="10%" id="table_th_num" class="board__column">번호</th>
-                            <th width="40%" id="table_th_title" class="board__column">제목</th>
-                            <th width="20%" id="table_th_author" class="board__column">작성자</th>
-                            <th width="20%" id="table_th_date" class="board__column">작성일</th>
-                            <th width="10%" id="table_th_view" class="board__column">조회</th>
+                            <th style="width: 10%" id="table_th_num" class="board__column">번호</th>
+                            <th style="width: 40%" id="table_th_title" class="board__column">제목</th>
+                            <th style="width: 20%" id="table_th_author" class="board__column">작성자</th>
+                            <th style="width: 20%" id="table_th_date" class="board__column">작성일</th>
+                            <th style="width: 10%" id="table_th_view" class="board__column">조회</th>
                         </tr>
                         </thead>
                         <tbody class="board__contents" id="board-body">
@@ -43,7 +44,7 @@
                         </tbody>
                     </table>
                     <div class="board_index-container" id="index-container">
-                        <div style="text-align: center; width: fit-content; height: 30px; margin: 0px auto;"
+                        <div style="text-align: center; width: fit-content; height: 30px; margin: 0 auto;"
                              th:if="${boardList} != null OR ${boardSize} != 0"
                              th:with="start=${page.startPageNum}, end=${page.endPageNum}">
                             <ul>

@@ -26,7 +26,7 @@ nhn.husky.EZCreator = new (function(){
 	this.nBlockerCount = 0;
 
 	this.createInIFrame = function(htOptions){
-		if(arguments.length == 1){
+		if(arguments.length === 1){
 			var oAppRef = htOptions.oAppRef;
 			var elPlaceHolder = htOptions.elPlaceHolder;
 			var sSkinURI = htOptions.sSkinURI;
@@ -66,7 +66,7 @@ nhn.husky.EZCreator = new (function(){
 		var elIFrame, nEditorHeight;
 
 		try{
-			elIFrame = document.createElement("<IFRAME frameborder=0 scrolling=no>");
+			elIFrame = document.createElement('<IFRAME frameborder=0 scrolling=no>');
 		}catch(e){
 			elIFrame = document.createElement("IFRAME");
 			elIFrame.setAttribute("frameborder", "0");

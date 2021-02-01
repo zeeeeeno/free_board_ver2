@@ -7,28 +7,27 @@ body{
 header {
     width: 100%;
     line-height: 80px;
-    border-bottom: 5px solid rgba(0, 153, 153, 1);
-    color: rgb(120, 120, 120);
+    border-bottom: 5px solid rgb(0, 153, 153);
+    color: #009999;
     text-align: center;
     vertical-align: middle;
 }
 
-wrap {
-    display: block;
-    margin: 0;
-    padding: 0;
+.board_body {
     min-height: 100%;
-    width: 100%;
+    margin: 0 auto -155px;
 }
 
 footer {
-    display: block;
+    /*margin-top:-1.9em;*/
+    /*height:1.9em; */
+    margin-top: 80px;
     width: 100%;
     line-height: 80px;
     color: rgb(120, 120, 120);
     text-align: center;
     vertical-align: middle;
-    background-color: rgba(0, 153, 153, 1);
+    background-color: #009999;
     bottom: 0;
 }
 
@@ -39,8 +38,8 @@ footer > p {
 }
 
 #container {
-    padding: 15px 200px 15px 200px;
-    height: 526px;
+    padding: 10px 250px 10px 250px;
+    height: 536px;
 }
 
 #contents {
@@ -85,9 +84,7 @@ p {
 }
 
 .content_header {
-    margin: 10px 100px 10px 0;
-    display: inline-block;
-    width: 40%;
+    margin: 10px 10px 10px 0;
 }
 
 textarea {
@@ -98,7 +95,10 @@ textarea {
 
 input[type=text]  {
     padding: 5px;
-    width: 60%;
+    border: 1px solid #939393;
+    border-radius: 1vh;
+    margin: 5px 0 0 5px;
+    width: 100%;
 }
 
 input[type=submit]  {
@@ -139,7 +139,7 @@ td > a {
 }
 
 h3 {
-    margin: 0 0 10px 0;
+    margin: 10px 0 10px 0;
 }
 
 .btn_area {
@@ -245,7 +245,7 @@ tr {
     width: fit-content;
 }
 
-button[type=list] {
+button[type=button] {
     float: right;
     background: none;
     border: none;
@@ -253,7 +253,7 @@ button[type=list] {
     font-size: larger;
     color: darkblue;
 }
-button[type=list]:hover{
+button[type=button]:hover{
     color: #3030fc;
 }
 
@@ -313,4 +313,24 @@ button[type=list]:hover{
 
 .contents_input {
     height: 100%;
+}
+
+.modal {
+    z-index: 10;
+    position: absolute;
+    top: 80px;
+    left: 20%;
+    display: none;
+    background-color: white;
+    border-radius: 3vh;
+    box-shadow: 3px 3px 10px #636363;
+}
+
+.w3-modal-content, .modal-header {
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 3vh;
+}
+
+h2 {
+    margin: 0;
 }

@@ -6,31 +6,31 @@
         xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout ">
 <body>
 <div layout:fragment="board">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <div id="container">
         <div id="contents">
             <form id="board_write">
                 <div id="contents_header">
                     <div class="content_header">
-                        <label for="board_title">제목</label>
+                        <label for="board_title">제목</label><br>
                         <input type="text" id="board_title" placeholder="제목을 입력하세요.">
                     </div>
                     <div class="content_header">
-                        <label for="board_author">작성자</label>
+                        <label for="board_author">작성자</label><br>
                         <input type="text" id="board_author" placeholder="작성자를 입력하세요.">
                     </div>
                 </div>
                 <div class="content" style="height: auto">
                     <label for="ir1">내용</label><br>
-                    <textarea name="ir1" id="ir1" rows="10" cols="100"></textarea>
+                    <textarea name="ir1" id="ir1" style="width:100%; height:280px;"></textarea>
                 </div>
                 <div id="btn-content">
                     <div class="btn_area">
                         <input type="submit" onclick="submitContents(this);" value="작성">
                     </div>
                     <div class="btn_area">
-                        <input type="button" value="취소" onclick="location.href='./board_list.html'">
+                        <input type="button" value="취소" onclick="location.href='/board/list'">
                     </div>
                 </div>
             </form>
