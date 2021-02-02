@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "spring.h2.profiles.active",
+      "type": "java.lang.String",
+      "description": "Description for spring.h2.profiles.active."
+    },
+    {
+      "name": "cloud.aws.sqs.queue.url",
+      "type": "java.lang.String",
+      "description": "Description for cloud.aws.sqs.queue.url."
+    }
+  ] }

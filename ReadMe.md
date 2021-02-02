@@ -30,6 +30,16 @@
 
 ---
 
+#### 추가 진행
+
+###### Naver Smart Editor
+
+- 게시글 작성, 수정 부분 Text Editor API 적용
+
+
+
 #### 참고자료
 
 https://github.com/zeeeeeno/personal_project
+
+https://github.com/naver/smarteditor2

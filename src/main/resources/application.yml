@@ -2,6 +2,10 @@ server:
   port: 8080
 
 spring:
+  profiles:
+    include:
+      - aws # application-aws.yml
+
   h2:
     console:
       enabled: true
@@ -35,3 +39,15 @@ spring:
 
   freemarker:
     cache: false
+
+cloud:
+  aws:
+    sqs:
+      queue:
+        url: https://sqs.ap-northeast-2.amazonaws.com/634763629386/paul-standard-queue
+    region:
+      static: ap-northeast-2 # AWS SQS Region
+    credentials:
+      instance-profile: true
+    stack:
+      auto: false

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.Board;
 import java.util.List;
+import com.example.demo.domain.Board;
 
 public interface BoardService {
     /**

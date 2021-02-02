@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.Board;
-import com.example.demo.repository.BoardRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
+import lombok.extern.java.Log;
+import com.example.demo.domain.Board;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
+import com.example.demo.repository.BoardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Log
 @Service
