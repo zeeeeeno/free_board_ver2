@@ -1,6 +1,6 @@
 # 자유게시판
 
-#### Git Test add test
+#### Git Test remote test
 
 #### 주제
 
